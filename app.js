@@ -15,7 +15,7 @@ mongoose.connect(
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: 'cat-door-log',
+        dbName: 'catdoorlogs',
     },
     console.log("CONNECTED")
 );
