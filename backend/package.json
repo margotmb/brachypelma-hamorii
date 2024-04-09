@@ -1,12 +1,16 @@
 {
   "dependencies": {
-    "express": "^4.19.2"
+    "connect-mongodb-session": "^5.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "mongoose": "^8.3.1"
   },
   "name": "stunning-spark",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
