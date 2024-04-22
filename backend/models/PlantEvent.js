@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const plantEventSchema = new Schema(
   {
+    deviceId: {
+      type: String,
+      required: true,
+    },
     moistureLevelDesc: {
       type: String,
       required: true,
