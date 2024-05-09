@@ -17,7 +17,7 @@ char ssid[] = ""; //SSID - Nome da Wifi
 char pass[] = ""; //Senha da Wifi
 
 void setup() {
-
+  dht.begin();
   // D5 = 13 - RED LED
   pinMode(redLED, OUTPUT);
   // D6 = 12 - YELLOW LED
@@ -54,6 +54,25 @@ void loop() {
 
   // Mapeia de 0 a 100
   //valor_lido = map(valor_lido, 1024, 400, 0, 100);
+
+  // A leitura da temperatura e umidade pode levar 250ms!
+  // O atraso do sensor pode chegar a 2 segundos.
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  // testa se retorno é valido, caso contrário algo está errado.
+  if (isnan(t) || isnan(h)) 
+  {
+    Serial.println("Failed to read from DHT");
+  } 
+  else
+  {
+    Serial.print("Umidade: ");
+    Serial.print(h);
+    Serial.print(" %t");
+    Serial.print("Temperatura: ");
+    Serial.print(t);
+    Serial.println(" *C");
+  }
   delay(1000);
 
 }
