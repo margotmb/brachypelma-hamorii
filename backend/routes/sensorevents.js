@@ -1,21 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const PlantEvent = require("../models/PlantEvent");
+const SensorEvent = require("../models/SensorEvent");
 
 // @route GET
 // @description Get all events from current device id
 router.get("/", (req, res) => {
   PlantEvent.find({ deviceId: req.params.deviceId })
-    .then((PlantEvents) => res.json(PlantEvents))
+    .then((SensorEvents) => res.json(SensorEvents))
     .catch((err) =>
-      res.status(404).json({ noplanteventsfound: "No Events found" }),
+      res.status(404).json({ nosensoreventsfound: "No Events found" }),
     );
 });
 
 // @route POST
 // @description add/save event to DB, needs deviceId
 // @access Public -> Create Collection for Device Permission
-// Check if device is on the database, deviceId stays on cookie for querys and checks
+// Check if device is on the database for posting
 router.post("/", (req, res) => {
   PlantEvent.create(req.body)
     .then(res.json({ msg: "Event added successfully" }))
