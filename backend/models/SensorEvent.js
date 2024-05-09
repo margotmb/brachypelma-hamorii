@@ -1,17 +1,21 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const plantEventSchema = new Schema(
+const sensorEventSchema = new Schema(
   {
     deviceId: {
       type: String,
       required: true,
     },
-    moistureLevelDesc: {
-      type: String,
+    sensorMoisture: {
+      type: Number,
       required: true,
     },
-    moistureLevelInt: {
+    sensorTemp: {
+      type: Number,
+      required: true,
+    },
+    sensorLight: {
       type: Number,
       required: true,
     },
@@ -20,7 +24,7 @@ const plantEventSchema = new Schema(
       default: Date.now,
     },
   },
-  { collection: "planteventlog" },
+  { collection: "sensoreventlog" },
 );
 
-module.exports = PlantEvent = mongoose.model("PlantEvent", plantEventSchema);
+module.exports = SensorEvent = mongoose.model("SensorEvent", sensorEventSchema);

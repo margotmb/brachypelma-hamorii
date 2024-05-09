@@ -15,15 +15,15 @@ mongoose.connect(
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    dbName: "planteventlog",
+    dbName: "",
   },
   console.log("CONNECTED"),
 );
 
 // routes
-const plantevents = require("./routes/plantevents");
+const sensorevents = require("./routes/sensorevents");
 
-app.use("/plantevents", plantevents);
+app.use("/sensorevents", sensorevents);
 
 app.get("/", (req, res) => {
   res.send("hello world");
