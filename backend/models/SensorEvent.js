@@ -24,7 +24,7 @@ const sensorEventSchema = new Schema(
       default: Date.now,
     },
   },
-  { collection: "sensoreventlog" },
+  { collection: "sensorevents" },
 );
 
 module.exports = SensorEvent = mongoose.model("SensorEvent", sensorEventSchema);

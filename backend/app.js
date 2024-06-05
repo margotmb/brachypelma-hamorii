@@ -15,7 +15,7 @@ mongoose.connect(
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    dbName: "",
+    dbName: "spiderdb_margot",
   },
   console.log("CONNECTED"),
 );
