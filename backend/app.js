@@ -26,7 +26,7 @@ const sensorevents = require("./routes/sensorevents");
 app.use("/sensorevents", sensorevents);
 
 app.get("/", (req, res) => {
-  res.send("hello world");
+  res.send("API Home");
 });
 //PORT SET
 var port = 5000;

@@ -3,6 +3,16 @@ const router = express.Router();
 const SensorEvent = require("../models/SensorEvent");
 
 // @route GET
+// @description Get all events
+router.get("/", (req, res) => {
+  SensorEvent.find({})
+    .then((SensorEvents) => res.json(SensorEvents))
+    .catch((err) =>
+      res.status(404).json({ nosensoreventsfound: "No Events found" }),
+    );
+});
+
+// @route GET
 // @description Get all events from current device id
 router.get("/:deviceId", (req, res) => {
   console.log(req.params);
