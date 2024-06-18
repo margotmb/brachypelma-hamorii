@@ -1,56 +1,42 @@
 
-import React from 'react'; 
-import { StyleSheet } from 'react-native'; 
-import { DataTable } from 'react-native-paper';
+import React, { useState } from 'react'; 
+import { StyleSheet, View } from 'react-native';
+import { Table, Row, Rows } from 'react-native-table-component';
 
-const jsonData = [
+const data = [
     { id: 1, name: 'John Doe', age: 30 },
     { id: 2, name: 'Jane Smith', age: 25 },
     { id: 3, name: 'Bob Johnson', age: 35 }
   ];
+
+const tableData = {
+    tableHead: ['Temp ºC', 'Umidade %', 'Luz', 'DataHora'],
+    tableData: [
+      ['25', '80', 'true', '15:30 15/06/2024'],
+      ['27', '70', 'false','14:30 15/06/2024'],
+      ['28', '60', 'true','13:30 15/06/2024'],
+    ],
+}
   
 const TableExample = () => { 
-  return ( 
-    <DataTable style={styles.container}> 
-      <DataTable.Header style={styles.tableHeader}> 
-        <DataTable.Title>Name</DataTable.Title> 
-        <DataTable.Title>Favourite Food</DataTable.Title> 
-        <DataTable.Title>Age</DataTable.Title> 
-      </DataTable.Header> 
-      <DataTable.Row> 
-        <DataTable.Cell>Radhika</DataTable.Cell> 
-        <DataTable.Cell>Dosa</DataTable.Cell> 
-        <DataTable.Cell>23</DataTable.Cell> 
-      </DataTable.Row> 
-  
-      <DataTable.Row> 
-        <DataTable.Cell>Krishna</DataTable.Cell> 
-        <DataTable.Cell>Uttapam</DataTable.Cell> 
-        <DataTable.Cell>26</DataTable.Cell> 
-      </DataTable.Row> 
-      <DataTable.Row> 
-        <DataTable.Cell>Vanshika</DataTable.Cell> 
-        <DataTable.Cell>Brownie</DataTable.Cell> 
-        <DataTable.Cell>20</DataTable.Cell> 
-      </DataTable.Row> 
-      <DataTable.Row> 
-        <DataTable.Cell>Teena</DataTable.Cell> 
-        <DataTable.Cell>Pizza</DataTable.Cell> 
-        <DataTable.Cell>24</DataTable.Cell> 
-      </DataTable.Row> 
-    </DataTable> 
-  ); 
+  const [data, setData] = useState(tableData);
+  return (
+      <View style={styles.container}>
+          <Table borderStyle={{ borderWidth: 2, borderColor: 'orange' }}>
+              <Row data={data.tableHead} style={styles.head} textStyle={styles.headText} />
+              <Rows data={data.tableData} textStyle={styles.text} />
+          </Table>
+      </View>
+  )
 }; 
   
 // npm install react-native-table-component
 // https://www.waldo.com/blog/react-native-table
   
-const styles = StyleSheet.create({ 
-  container: { 
-    padding: 15, 
-  }, 
-  tableHeader: { 
-    backgroundColor: '#DCDCDC', 
-  }, 
-});
+const styles = StyleSheet.create({
+  container: { flex: 1, marginBottom: 15, padding: 0, justifyContent: 'center', backgroundColor: '#fff' },
+  head: { height: 40, backgroundColor: 'white' },
+  headText: { fontSize: 13, fontWeight: 'bold' , textAlign: 'center', color: 'black' },
+  text: { margin: 6, fontSize: 14, fontWeight: 'bold' , textAlign: 'center' },
+})
 export default TableExample; 

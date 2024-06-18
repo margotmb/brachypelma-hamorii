@@ -58,18 +58,20 @@ export default function ParallaxScrollView({
     </ThemedView>
   );
 }
-
+// Style General
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   header: {
-    height: 250,
+    height: 225,
     overflow: 'hidden',
+    flexDirection: 'row',
+    justifyContent: 'center'
   },
   content: {
     flex: 1,
-    padding: 32,
+    padding: 16,
     gap: 16,
     overflow: 'hidden',
   },

@@ -1,19 +1,18 @@
 import { Image, StyleSheet, Platform, Text } from 'react-native';
-
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import DisplayData from '@/components/DataTable';
+import TableExample from '@/components/DataTable';
 
 export default function HomeScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerBackgroundColor={{ light: '#ffbd59', dark: '#ffbd59' }}
       headerImage={
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+          source={require('@/assets/images/spider_1.png')}
+          style={styles.appLogo}
         />
       }>
       <ThemedView style={styles.titleContainer}>
@@ -21,7 +20,7 @@ export default function HomeScreen() {
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <DisplayData></DisplayData>
+        <TableExample></TableExample>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
           Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
@@ -32,6 +31,11 @@ export default function HomeScreen() {
           to open developer tools.
         </ThemedText>
       </ThemedView>
+
+    </ParallaxScrollView>
+  );
+}
+/*
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 2: Explore</ThemedText>
         <ThemedText>
@@ -48,10 +52,7 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView>
-    </ParallaxScrollView>
-  );
-}
-
+*/
 const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
@@ -62,11 +63,9 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
+  appLogo: {
+    height: 170,
     width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+    top: 30,
   },
 });
