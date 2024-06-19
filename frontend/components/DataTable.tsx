@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react'; 
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Button } from 'react-native';
 import { Table, Row, Rows } from 'react-native-table-component';
 
 /*
@@ -14,7 +14,6 @@ import { Table, Row, Rows } from 'react-native-table-component';
     ],
 */   
 
-
 let tableData = {tableHead: [''], tableData: [['']]}
 
 const TableExample = () => { 
@@ -24,39 +23,65 @@ const TableExample = () => {
     fetchData();
   }, []);
 
-  const fetchData = async () => fetch('https://universalis.app/api/v2/extra/stats/least-recently-updated?world=siren&dcName=aether&entries=10')
+  function onPressLearnMore(){
+    fetchData()
+  }
+  const fetchData = async () => fetch('http://localhost:5000/sensorevents')
                 .then(data => data.json())
                 .then((data) => {
-                  console.log(data['items'][0]);
-                  data = data['items']
                   let dataArray = []
-                  for(var i = 0; i<=9; i++){
-                    dataArray.push([data[i]['itemID'], data[i]['lastUploadTime'], data[i]['worldID'], data[i]['worldName']])
+                  for(var j = data.length-1; j >= 0; j--){
+                    data[j]['createdAt'] = data[j]['createdAt'].replace("T", "   ")
+                    data[j]['createdAt'] = data[j]['createdAt'].replace(/....Z/, '')
+                  }
+                  let arrayStart = 0
+                  if (data.length >= 10){
+                    arrayStart = 10
+                  }
+                  else{
+                    arrayStart = data.length
+                  }
+                  for(var i = arrayStart-1; i >= 0; i--){
+                    dataArray.push([data[i]['sensorMoisture'], data[i]['sensorTemp'], data[i]['sensorLight'], data[i]['createdAt']])
                   }
                   
                   tableData = {
-                    tableHead: ['itemID', 'lastUploadTime', 'worldID', 'worldName'],
+                    tableHead: ['Umidade %', 'Temp ºC', 'Luz', 'DataHora'],
                     tableData: dataArray,
                   }
                   setData(tableData)
                 })
               
   return (
-      <View style={styles.container}>
+      <View>
+        <View style={styles.container}>
           <Table borderStyle={{ borderWidth: 2, borderColor: 'orange' }}>
               <Row data={data.tableHead} style={styles.head} textStyle={styles.headText} />
               <Rows data={data.tableData} textStyle={styles.text} />
           </Table>
+        </View>
+        <View style={styles.buttonContainer}>
+          <View style={styles.buttonSettings}>
+          <Button 
+            onPress={onPressLearnMore}
+            title="Update 🔁"
+            color="#841584"
+            accessibilityLabel="Update button"
+          />
+          </View>
+        </View>
       </View>
   )
 }; 
   
 
-  
+//borderColor: 'red', borderStyle: 'dotted', borderWidth:2
 const styles = StyleSheet.create({
   container: { flex: 1, marginBottom: 15, padding: 0, justifyContent: 'center', backgroundColor: '#fff' },
   head: { height: 40, backgroundColor: 'white' },
   headText: { fontSize: 13, fontWeight: 'bold' , textAlign: 'center', color: 'black' },
   text: { margin: 6, fontSize: 14, fontWeight: 'bold' , textAlign: 'center' },
+  buttonContainer: { flex: 2, flexDirection:'row-reverse', justifyContent: 'center',marginBottom: 15, padding: 0},
+  buttonSettings: {width:'40%'}
 })
 export default TableExample; 
