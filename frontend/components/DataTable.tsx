@@ -34,14 +34,14 @@ const TableExample = () => {
                     data[j]['createdAt'] = data[j]['createdAt'].replace("T", "   ")
                     data[j]['createdAt'] = data[j]['createdAt'].replace(/....Z/, '')
                   }
-                  let arrayStart = 0
+                  let arrayEnd = 0
                   if (data.length >= 10){
-                    arrayStart = 10
+                    arrayEnd = data.length-10
                   }
                   else{
-                    arrayStart = data.length
+                    arrayEnd = data.length
                   }
-                  for(var i = arrayStart-1; i >= 0; i--){
+                  for(var i = data.length-1; i >= arrayEnd; i--){
                     dataArray.push([data[i]['sensorMoisture'], data[i]['sensorTemp'], data[i]['sensorLight'], data[i]['createdAt']])
                   }
                   
