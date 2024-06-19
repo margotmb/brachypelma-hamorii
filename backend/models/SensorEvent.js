@@ -1,12 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+
 const sensorEventSchema = new Schema(
   {
-    deviceId: {
-      type: String,
-      required: true,
-    },
     sensorMoisture: {
       type: Number,
       required: true,
@@ -21,7 +18,7 @@ const sensorEventSchema = new Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now,
+      required: true
     },
   },
   { collection: "sensorevents" },
