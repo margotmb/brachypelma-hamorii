@@ -1,39 +1,68 @@
-/* Nome: Margot Machado Baisch (19203810) */
 
+
+/*
+Nome: Margot Machado Baisch
+Matrícula: 19203810
+
+PINS                Wemos | Arduino
+
+static const uint8_t D0   = 3;
+static const uint8_t D1   = 1;
+static const uint8_t D2   = 16;
+static const uint8_t D3   = 5;
+static const uint8_t D4   = 4;
+static const uint8_t D5   = 14;
+static const uint8_t D6   = 12;
+static const uint8_t D7   = 13;
+static const uint8_t D8   = 0;
+static const uint8_t D9   = 2;
+static const uint8_t D10  = 15;
+static const uint8_t D11  = 13;
+static const uint8_t D12  = 12;
+static const uint8_t D13  = 14;
+static const uint8_t D14  = 4;
+static const uint8_t D15  = 5;
+
+D4 -> Sensor Luz
+D5 -> Sensor Temp
+D6 -> Red Led
+D7 -> Green Led
+
+*/
+#include <ESP8266HTTPClient.h>
+#include <WiFiClientSecureBearSSL.h>
 #include <ESP8266WiFi.h>
-#include <DHT.h>
-#include <DHT_U.h>
+#include <dht11.h>
 
-#define DHT_PIN 16 // D2
-#define DHTTYPE DHT11
+/* 4 - D4*/
+#define pinoLDR 4
 
-#define redLED 13 // D5
-#define yellowLED 12 //D6
-#define greenLED 14// D7
+/* 12 - D6 */
+#define redLED 12
+/* 13 - D7*/
+#define greenLED 13
 
-DHT_Unified dht(DHTPIN, DHTTYPE);
+/* 14 - D5 */
+#define DHT11PIN 14
+dht11 DHT11;
+char ssid[] = "motog30_123"; //SSID - Nome da Wifi
+char pass[] = "12345678"; //Senha da Wifi
 
-char ssid[] = ""; //SSID - Nome da Wifi
-char pass[] = ""; //Senha da Wifi
 
 void setup() {
-  dht.begin();
-  // D5 = 13 - RED LED
   pinMode(redLED, OUTPUT);
-  // D6 = 12 - YELLOW LED
-  pinMode(yellowLED, OUTPUT);
-  // D7 = 14 - GREEN LED
   pinMode(greenLED, OUTPUT);
-
-  Serial.begin(115200);
+  pinMode(pinoLDR,INPUT);
+  Serial.begin(57600);
   delay(10);
 
+  digitalWrite(greenLED, LOW);
+  digitalWrite(redLED, HIGH);
   // Conecta na Wifi
   Serial.println();
   Serial.println();
   Serial.print("Connecting to...");
   Serial.println(ssid);
-  /*
   
   WiFi.begin(ssid, pass);
   
@@ -41,39 +70,88 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  */
   Serial.println("");
   Serial.println("Wi-Fi connected successfully");
   
+  digitalWrite(greenLED, HIGH);
+  digitalWrite(redLED, LOW);
 }
 
 void loop() {
-  int valor_lido = analogRead(A0);
-  Serial.print("AnalogRead: ");
-  Serial.println(valor_lido);
+    if (WiFi.status() == WL_CONNECTED){
+      digitalWrite(greenLED, HIGH);
+      digitalWrite(redLED, LOW);
+      std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
+  
+      // Ignore SSL certificate validation
+      client->setInsecure();
+      
+      //create an HTTPClient instance
+      HTTPClient https;
 
-  // Mapeia de 0 a 100
-  //valor_lido = map(valor_lido, 1024, 400, 0, 100);
+      int luz = digitalRead(pinoLDR);
+      Serial.println("----------");
+      Serial.print("Luz:");
+      if (luz == 1){
+        Serial.println(" Desligada");
+      }
+      else{
+        Serial.println(" Ligada");
+      }
+    
+      int chk = DHT11.read(DHT11PIN);
+      
+      Serial.print("Umidade (%): ");
+      float umidade_f = (float)DHT11.humidity;
+      Serial.println(umidade_f, 2);
 
-  // A leitura da temperatura e umidade pode levar 250ms!
-  // O atraso do sensor pode chegar a 2 segundos.
-  float h = dht.readHumidity();
-  float t = dht.readTemperature();
-  // testa se retorno é valido, caso contrário algo está errado.
-  if (isnan(t) || isnan(h)) 
-  {
-    Serial.println("Failed to read from DHT");
-  } 
-  else
-  {
-    Serial.print("Umidade: ");
-    Serial.print(h);
-    Serial.print(" %t");
-    Serial.print("Temperatura: ");
-    Serial.print(t);
-    Serial.println(" *C");
-  }
-  delay(1000);
+   
+      Serial.print("Temperatura (C): ");
+      float temp_f = (float)DHT11.temperature;
+      Serial.println(temp_f, 2);
 
+      String umidade = String(umidade_f,2);
+      String temperatura = String(temp_f,2);
+      delay(2000);
+      
+      //Initializing an HTTPS communication using the secure client
+      Serial.print("[HTTPS] begin...\n");
+      if (https.begin(*client, "https://stunning-spark-xax8.onrender.com/sensorevents")) {  // HTTPS
+        Serial.print("[HTTPS] POST...\n");
+        // start connection and send HTTP header
+        https.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        String httpRequestData = "sensorMoisture=" ;
+        httpRequestData.concat(umidade);
+        httpRequestData.concat("&sensorTemp=");
+        httpRequestData.concat(temperatura);
+        httpRequestData.concat("&sensorLight=");
+        httpRequestData.concat(luz);
+        Serial.println(httpRequestData);
+        int httpCode = https.POST(httpRequestData);
+        // httpCode will be negative on error
+        if (httpCode > 0) {
+          // HTTP header has been send and Server response header has been handled
+          Serial.printf("[HTTPS] GET... code: %d\n", httpCode);
+          // file found at server
+          if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+            String payload = https.getString();
+            Serial.println(payload);
+          }
+        } else {
+          Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
+        }
+  
+        https.end();
+      } else {
+        Serial.printf("[HTTPS] Unable to connect\n");
+      }
+      Serial.println("Standby for next cycle...");
+      delay(3000);
+    }
+    else{
+      digitalWrite(greenLED, LOW);
+      digitalWrite(redLED, HIGH);
+      Serial.println("Lost Connection - Retrying...");
+      delay(2500);
+    }
 }
-
