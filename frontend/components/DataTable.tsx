@@ -26,7 +26,7 @@ const TableExample = () => {
   function onPressLearnMore(){
     fetchData()
   }
-  const fetchData = async () => fetch('http://localhost:5000/sensorevents')
+  const fetchData = async () => fetch('https://stunning-spark-xax8.onrender.com/sensorevents')
                 .then(data => data.json())
                 .then((data) => {
                   let dataArray = []
