@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react'; 
 import { StyleSheet, View, Button } from 'react-native';
 import { Table, Row, Rows } from 'react-native-table-component';
@@ -37,14 +36,15 @@ const TableExample = () => {
                   let arrayEnd = 0
                   if (data.length >= 10){
                     arrayEnd = data.length-10
+                    for(var i = data.length-1; i >= arrayEnd; i--){
+                      dataArray.push([data[i]['sensorMoisture'], data[i]['sensorTemp'], data[i]['sensorLight'], data[i]['createdAt']])
+                    }
                   }
                   else{
-                    arrayEnd = data.length
+                    for(var i = data.length-1; i >= 0; i--){
+                      dataArray.push([data[i]['sensorMoisture'], data[i]['sensorTemp'], data[i]['sensorLight'], data[i]['createdAt']])
+                    }
                   }
-                  for(var i = data.length-1; i >= arrayEnd; i--){
-                    dataArray.push([data[i]['sensorMoisture'], data[i]['sensorTemp'], data[i]['sensorLight'], data[i]['createdAt']])
-                  }
-                  
                   tableData = {
                     tableHead: ['Umidade %', 'Temp ºC', 'Luz', 'DataHora'],
                     tableData: dataArray,
