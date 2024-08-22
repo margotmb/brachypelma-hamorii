@@ -3,4 +3,4 @@ Then the information will be displayed through a WebApp where the user can track
 
 Backend: Nodejs with Express
 
-Frontend: Reactjs
+Frontend: React Native
